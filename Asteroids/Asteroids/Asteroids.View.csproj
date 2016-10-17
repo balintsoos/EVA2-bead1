@@ -62,6 +62,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="View\AsteroidsForm.resx">
       <DependentUpon>AsteroidsForm.cs</DependentUpon>
@@ -84,6 +85,16 @@
       <Project>{1644728a-da7b-4783-af33-5e8fe8d80f3d}</Project>
       <Name>Asteroids.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Asteroids.Utils\Asteroids.Utils.csproj">
+      <Project>{42100df8-ce9e-467d-8948-f1c8947f60ce}</Project>
+      <Name>Asteroids.Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ship.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\space.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
