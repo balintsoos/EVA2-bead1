@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace Asteroids.Model
 {
@@ -15,6 +16,8 @@ namespace Asteroids.Model
         private Coordinate _player;
         private Board _gameBoard;
         private bool _paused;
+        private Timer _timer;
+        private int _time;
 
         #endregion
 
@@ -53,6 +56,7 @@ namespace Asteroids.Model
             InitPlayer();
             InitAsteroids();
             OnFieldsChanged();
+            InitTimer();
 
             _paused = false;
         }
@@ -71,8 +75,10 @@ namespace Asteroids.Model
         {
             if (!_paused && _player.X > 0)
             {
-                _player.X = _player.X - 1;
+                _player.X -= 1;
+
                 OnFieldsChanged();
+                CheckCollision();
             }
         }
 
@@ -80,8 +86,10 @@ namespace Asteroids.Model
         {
             if (!_paused && _player.X < _gameBoard.Width - 1)
             {
-                _player.X = _player.X + 1;
+                _player.X += 1;
+
                 OnFieldsChanged();
+                CheckCollision();
             }
         }
 
@@ -91,13 +99,35 @@ namespace Asteroids.Model
 
         private void InitPlayer()
         {
-            _player = new Coordinate(0, 0);
+            _player = new Coordinate(0, _gameBoard.Height - 1);
         }
 
         private void InitAsteroids()
         {
             _asteroids = new List<Coordinate>();
             _asteroids.Add(new Coordinate(1,0));
+        }
+
+        private void InitTimer()
+        {
+            if (_timer != null)
+            {
+                _timer.Stop();
+            }
+
+            _time = 0;
+            _timer = new Timer(1000);
+            _timer.Elapsed += TimePassed;
+            _timer.Start();
+        }
+
+        private void TimePassed(object sender, ElapsedEventArgs e)
+        {
+            _time += 1;
+            MoveAsteroids();
+            CheckCollision();
+
+            OnFieldsChanged();
         }
 
         private void CheckCollision()
@@ -142,6 +172,9 @@ namespace Asteroids.Model
 
         private void OnGameOver()
         {
+            _paused = true;
+            _timer.Stop();
+
             if (GameOver != null)
                 GameOver(this, EventArgs.Empty);
         }
