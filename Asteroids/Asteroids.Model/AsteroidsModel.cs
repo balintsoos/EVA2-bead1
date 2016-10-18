@@ -52,6 +52,11 @@ namespace Asteroids.Model
             get { return _paused; }
         }
 
+        public int Time
+        {
+            get { return _time; }
+        }
+
         #endregion
 
         #region Public methods
@@ -121,17 +126,19 @@ namespace Asteroids.Model
 
             _time = 0;
             _timer = new Timer(1000);
-            _timer.Elapsed += TimePassed;
+            _timer.Elapsed += TimeChanged;
             _timer.Start();
         }
 
-        private void TimePassed(object sender, ElapsedEventArgs e)
+        private void TimeChanged(object sender, ElapsedEventArgs e)
         {
             _time += 1;
             MoveAsteroids();
-            CheckCollision();
 
             OnFieldsChanged();
+            OnTimePassed();
+
+            CheckCollision();
         }
 
         private void CheckCollision()
@@ -166,9 +173,11 @@ namespace Asteroids.Model
 
         #region Events
 
-        public event EventHandler GameOver;
+        public event EventHandler<int> GameOver;
 
         public event EventHandler FieldsChanged;
+
+        public event EventHandler<int> TimePassed;
 
         #endregion
 
@@ -179,12 +188,17 @@ namespace Asteroids.Model
             _paused = true;
             _timer.Stop();
 
-            GameOver?.Invoke(this, EventArgs.Empty);
+            GameOver?.Invoke(this, _time);
         }
 
         private void OnFieldsChanged()
         {
             FieldsChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void OnTimePassed()
+        {
+            TimePassed?.Invoke(this, _time);
         }
 
         #endregion

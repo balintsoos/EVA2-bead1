@@ -36,12 +36,12 @@ namespace Asteroids.View
 
             _model = new AsteroidsModel(_rows, _columns);
             _model.FieldsChanged += new EventHandler(Model_FieldsChanged);
-            _model.GameOver += new EventHandler(Model_GameOver);
+            _model.TimePassed += new EventHandler<int>(Model_TimePassed);
+            _model.GameOver += new EventHandler<int>(Model_GameOver);
 
             _newGameButton.Click += new EventHandler(AsteroidsForm_NewGame);
 
             _pauseResumeButton.Click += new EventHandler(AsteroidsForm_PauseResume);
-            _pauseResumeButton.Visible = false;
 
             KeyPreview = true;
             KeyDown += new KeyEventHandler(AsteroidsForm_KeyDown);
@@ -56,10 +56,17 @@ namespace Asteroids.View
             RefreshPanel();
         }
 
-        private void Model_GameOver(object sender, EventArgs e)
+        private void Model_TimePassed(object sender, int time)
         {
-            MessageBox.Show("You Died!", "Game Over", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-            _model.NewGame();
+            RefreshTime(time);
+        }
+
+        private void Model_GameOver(object sender, int time)
+        {
+            string header = "Game Over";
+            string text = "You lived for " + time.ToString() + " seconds";
+            MessageBox.Show(text, header, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            InitGame();
         }
 
         #endregion
@@ -68,12 +75,9 @@ namespace Asteroids.View
 
         private void AsteroidsForm_NewGame(object sender, EventArgs e)
         {
-            InitPanel();
-
-            _model.NewGame();
-
-            _pauseResumeButton.Text = _model.Paused ? "Resume" : "Pause";
+            InitGame();
             _pauseResumeButton.Visible = true;
+            _timeLabel.Visible = true;
         }
 
         private void AsteroidsForm_PauseResume(object sender, EventArgs e)
@@ -88,11 +92,6 @@ namespace Asteroids.View
                 _model.Pause();
                 _pauseResumeButton.Text = "Resume";
             }
-        }
-
-        private void AsteroidsForm_Resize(object sender, EventArgs e)
-        {
-            
         }
 
         private void AsteroidsForm_KeyDown(object sender, KeyEventArgs e)
@@ -147,6 +146,28 @@ namespace Asteroids.View
             }
 
             _panel.CreateGraphics().DrawImage(bitmap, 0, 0);
+        }
+
+        private void RefreshTime(int time)
+        {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action<int>(RefreshTime), new object[] { time });
+                return;
+            }
+
+            _timeLabel.Text = "Time: " + time.ToString();
+        }
+
+        private void InitGame()
+        {
+            InitPanel();
+
+            _model.NewGame();
+
+            _pauseResumeButton.Text = _model.Paused ? "Resume" : "Pause";
+
+            RefreshTime(0);
         }
 
         #endregion
