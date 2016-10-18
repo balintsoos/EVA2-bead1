@@ -109,15 +109,28 @@ namespace Asteroids.Model
 
         #region Private methods
 
+        private void TimeChanged(object sender, ElapsedEventArgs e)
+        {
+            _time += 1;
+            MoveAsteroids();
+            AddAsteroids();
+
+            OnFieldsChanged();
+            OnTimePassed();
+
+            CheckCollision();
+        }
+
         private void InitPlayer()
         {
-            _player = new Coordinate(0, _gameBoard.Height - 1);
+            int centerField = _gameBoard.Width / 2 + 1;
+
+            _player = new Coordinate(centerField - 1, _gameBoard.Height - 1);
         }
 
         private void InitAsteroids()
         {
             _asteroids = new List<Coordinate>();
-            _asteroids.Add(new Coordinate(1,0));
         }
 
         private void InitTimer()
@@ -130,17 +143,6 @@ namespace Asteroids.Model
             _timer.Start();
         }
 
-        private void TimeChanged(object sender, ElapsedEventArgs e)
-        {
-            _time += 1;
-            MoveAsteroids();
-
-            OnFieldsChanged();
-            OnTimePassed();
-
-            CheckCollision();
-        }
-
         private void CheckCollision()
         {
             foreach (Coordinate asteroid in _asteroids)
@@ -150,6 +152,14 @@ namespace Asteroids.Model
                     OnGameOver();
                     return;
                 }
+            }
+        }
+
+        private void AddAsteroids()
+        {
+            for (int i = 0; i < _time; i++)
+            {
+                _asteroids.Add(new Coordinate(i, 0));
             }
         }
 
@@ -165,8 +175,7 @@ namespace Asteroids.Model
 
         private void DeletePassedAsteroids()
         {
-            var itemToRemove = _asteroids.SingleOrDefault(a => a.Y >= _gameBoard.Height - 1);
-            _asteroids.Remove(itemToRemove);
+            _asteroids.RemoveAll(a => a.Y >= _gameBoard.Height - 1);
         }
 
         #endregion
