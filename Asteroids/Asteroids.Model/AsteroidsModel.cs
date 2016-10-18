@@ -33,6 +33,16 @@ namespace Asteroids.Model
             get { return _gameBoard; }
         }
 
+        public Coordinate Player
+        {
+            get { return _player; }
+        }
+
+        public List<Coordinate> Asteroids
+        {
+            get { return _asteroids; }
+        }
+
         #endregion
 
         #region Public methods

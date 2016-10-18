@@ -1,4 +1,5 @@
 ﻿using Asteroids.Model;
+using Asteroids.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -98,6 +99,7 @@ namespace Asteroids.View
             Graphics graphics = Graphics.FromImage(bitmap);
             graphics.Clear(SystemColors.Control);
 
+            // Render background
             for (int i = 0; i < numberOfColums; i++)
             {
                 for (int j = 0; j < numberOfRows; j++)
@@ -106,7 +108,14 @@ namespace Asteroids.View
                 }
             }
 
-            graphics.DrawImage(Properties.Resources.ship, 2 * _fieldSize, 0 * _fieldSize, _fieldSize, _fieldSize);
+            // Render player
+            graphics.DrawImage(Properties.Resources.ship, _model.Player.X * _fieldSize, _model.Player.Y * _fieldSize, _fieldSize, _fieldSize);
+
+            // Render asteroids
+            foreach (Coordinate asteroid in _model.Asteroids)
+            {
+                graphics.DrawImage(Properties.Resources.asteroid, asteroid.X * _fieldSize, asteroid.Y * _fieldSize, _fieldSize, _fieldSize);
+            }
 
             _panel.CreateGraphics().DrawImage(bitmap, 0, 0);
         }
