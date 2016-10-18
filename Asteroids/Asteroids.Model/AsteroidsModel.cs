@@ -87,6 +87,34 @@ namespace Asteroids.Model
             _asteroids.Add(new Coordinate(1,0));
         }
 
+        private void CheckCollision()
+        {
+            foreach (Coordinate asteroid in _asteroids)
+            {
+                if (asteroid.Equals(_player))
+                {
+                    OnGameOver();
+                    return;
+                }
+            }
+        }
+
+        private void MoveAsteroids()
+        {
+            DeletePassedAsteroids();
+
+            foreach (Coordinate asteroid in _asteroids)
+            {
+                asteroid.Y = asteroid.Y + 1;
+            }
+        }
+
+        private void DeletePassedAsteroids()
+        {
+            var itemToRemove = _asteroids.SingleOrDefault(a => a.Y >= _gameBoard.Height - 1);
+            _asteroids.Remove(itemToRemove);
+        }
+
         #endregion
 
         #region Events
