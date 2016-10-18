@@ -14,6 +14,7 @@ namespace Asteroids.Model
         private List<Coordinate> _asteroids;
         private Coordinate _player;
         private Board _gameBoard;
+        private bool _paused;
 
         #endregion
 
@@ -52,11 +53,23 @@ namespace Asteroids.Model
             InitPlayer();
             InitAsteroids();
             OnFieldsChanged();
+
+            _paused = false;
+        }
+
+        public void Pause()
+        {
+            _paused = true;
+        }
+
+        public void Resume()
+        {
+            _paused = false;
         }
 
         public void TurnLeft()
         {
-            if (_player.X > 0)
+            if (!_paused && _player.X > 0)
             {
                 _player.X = _player.X - 1;
                 OnFieldsChanged();
@@ -65,7 +78,7 @@ namespace Asteroids.Model
 
         public void TurnRight()
         {
-            if (_player.X < _gameBoard.Width - 1)
+            if (!_paused && _player.X < _gameBoard.Width - 1)
             {
                 _player.X = _player.X + 1;
                 OnFieldsChanged();
