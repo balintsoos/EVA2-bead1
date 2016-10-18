@@ -30,7 +30,7 @@ namespace Asteroids.View
 
             _fieldSize = 100;
 
-            _model = new AsteroidsModel(3,3);
+            _model = new AsteroidsModel(5,5);
             _model.FieldsChanged += new EventHandler(Model_FieldsChanged);
             _model.GameOver += new EventHandler(Model_GameOver);
 
@@ -94,6 +94,12 @@ namespace Asteroids.View
             int width = numberOfColums * _fieldSize;
             int height = numberOfRows * _fieldSize;
 
+            _panel.Width = width;
+            _panel.Height = height;
+
+            Width = width + 40;
+            Height = height + 100;
+
             Bitmap bitmap = new Bitmap(width, height);
 
             Graphics graphics = Graphics.FromImage(bitmap);
@@ -104,7 +110,7 @@ namespace Asteroids.View
             {
                 for (int j = 0; j < numberOfRows; j++)
                 {
-                    graphics.DrawImage(Properties.Resources.space, j * _fieldSize, i * _fieldSize, _fieldSize, _fieldSize);
+                    graphics.DrawImage(Properties.Resources.space, i * _fieldSize, j * _fieldSize, _fieldSize, _fieldSize);
                 }
             }
 
