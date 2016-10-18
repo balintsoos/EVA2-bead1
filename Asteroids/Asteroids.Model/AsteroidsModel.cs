@@ -47,6 +47,11 @@ namespace Asteroids.Model
             get { return _asteroids; }
         }
 
+        public bool Paused
+        {
+            get { return _paused; }
+        }
+
         #endregion
 
         #region Public methods
@@ -55,8 +60,8 @@ namespace Asteroids.Model
         {
             InitPlayer();
             InitAsteroids();
-            OnFieldsChanged();
             InitTimer();
+            OnFieldsChanged();
 
             _paused = false;
         }
@@ -64,11 +69,13 @@ namespace Asteroids.Model
         public void Pause()
         {
             _paused = true;
+            _timer?.Stop();
         }
 
         public void Resume()
         {
             _paused = false;
+            _timer?.Start();
         }
 
         public void TurnLeft()
@@ -110,10 +117,7 @@ namespace Asteroids.Model
 
         private void InitTimer()
         {
-            if (_timer != null)
-            {
-                _timer.Stop();
-            }
+            _timer?.Stop();
 
             _time = 0;
             _timer = new Timer(1000);
@@ -175,14 +179,12 @@ namespace Asteroids.Model
             _paused = true;
             _timer.Stop();
 
-            if (GameOver != null)
-                GameOver(this, EventArgs.Empty);
+            GameOver?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnFieldsChanged()
         {
-            if (FieldsChanged != null)
-                FieldsChanged(this, EventArgs.Empty);
+            FieldsChanged?.Invoke(this, EventArgs.Empty);
         }
 
         #endregion
