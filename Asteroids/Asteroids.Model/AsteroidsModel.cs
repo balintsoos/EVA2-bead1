@@ -209,8 +209,7 @@ namespace Asteroids.Model
 
         private void OnGameOver()
         {
-            _paused = true;
-            _timer.Stop();
+            Pause();
 
             GameOver?.Invoke(this, _time);
         }
