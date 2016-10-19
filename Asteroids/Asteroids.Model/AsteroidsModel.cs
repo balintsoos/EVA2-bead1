@@ -157,9 +157,17 @@ namespace Asteroids.Model
 
         private void AddAsteroids()
         {
-            for (int i = 0; i < _time; i++)
+            int distanceOfWaves = 3;
+            int lengthOfWave = 8;
+
+            if (_time % distanceOfWaves == 0)
             {
-                _asteroids.Add(new Coordinate(i, 0));
+                int numberOfNewAsteroids = _time / lengthOfWave + 1;
+
+                for (int i = 0; i < numberOfNewAsteroids; i++)
+                {
+                    _asteroids.Add(new Coordinate(i, 0));
+                }
             }
         }
 
