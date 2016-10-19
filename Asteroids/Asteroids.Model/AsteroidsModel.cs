@@ -14,10 +14,15 @@ namespace Asteroids.Model
 
         private List<Coordinate> _asteroids;
         private Coordinate _player;
+
         private Board _gameBoard;
+
         private bool _paused;
+
         private Timer _timer;
         private int _time;
+
+        private ShuffledPositionList _shuffledList;
 
         #endregion
 
@@ -131,6 +136,7 @@ namespace Asteroids.Model
         private void InitAsteroids()
         {
             _asteroids = new List<Coordinate>();
+            _shuffledList = new ShuffledPositionList(_gameBoard.Width);
         }
 
         private void InitTimer()
@@ -158,16 +164,17 @@ namespace Asteroids.Model
         private void AddAsteroids()
         {
             int distanceOfWaves = 3;
-            int lengthOfWave = 8;
+            int lengthOfWave = 10;
 
-            if (_time % distanceOfWaves == 0)
+            _shuffledList.Shuffle();
+
+            int numberOfNewAsteroids = _time % distanceOfWaves == 0
+                ? _time / lengthOfWave + 1
+                : 1;
+
+            for (int i = 0; i < numberOfNewAsteroids; i++)
             {
-                int numberOfNewAsteroids = _time / lengthOfWave + 1;
-
-                for (int i = 0; i < numberOfNewAsteroids; i++)
-                {
-                    _asteroids.Add(new Coordinate(i, 0));
-                }
+                _asteroids.Add(new Coordinate(_shuffledList[i], 0));
             }
         }
 
